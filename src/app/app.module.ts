@@ -8,15 +8,11 @@ import { SqwrlComponent } from './sqwrl/sqwrl.component';
 
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ListFilterPipe } from './list-filter-pipe';
-import { TabulatorComponent } from './tabulator/tabulator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SqwrlComponent,
-    ListFilterPipe,
-    TabulatorComponent
+    SqwrlComponent
   ],
   imports: [
     BrowserModule,
