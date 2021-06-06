@@ -3,15 +3,13 @@
     <h1 class="display-6">Query The Ontology</h1>
     <br>
     <div class="input-group mb-3">
-        <select class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
-            <option value="0" selected>Select a predefined query ...</option>
-            <option value="1">What are the metaheuristics published after 2015 ?</option>
-            <option value="2">What are the Python libraries implementing NSGA-III ?</option>
-            <option value="3">What are the metaheuristics that were tested in Knapsack problem ?</option>
-            <option value="4">What are the metaheuristics that were tested in Knapsack problem having Java libraries implementations ?</option>
-            <option value="5">Which order relations have been proposed to many-objective optimisation ?</option>
-            <option value="6">Who are the researchers working both in decomposition-based and indicator-based metaheuristics ?</option>
+        <select *ngIf='!editMode && !editNewMode' class="custom-select" id="inputGroupSelect04" [(ngModel)]="currentQuery.id" (ngModelChange)="onQueryListChange($event)">
+            <option *ngIf='currentQuery.name === ""' value="0" selected>Select a predefined query...</option>
+            <option *ngIf='!(currentQuery.name === "")' [ngValue]="currentQuery.id" selected>{{currentQuery.name}}</option>
+            <option *ngFor="let queryData of queriesList" [ngValue]="queryData.id">{{queryData.name}}</option>
         </select>
+        <input *ngIf='editNewMode && !editMode' [(ngModel)]="newQuery.name" class="form-control" type="text" name="{{newQuery.name}}"/>
+        <input *ngIf='!editNewMode && editMode' [(ngModel)]="currentQuery.name" class="form-control" type="text" name="{{currentQuery.name}}"/>
         <div *ngIf='!queryRunning' class="input-group-append">
             <button class="btn btn-outline-secondary" type="button" (click) = "runQuery()">Run Query</button>
         </div>
@@ -21,6 +19,14 @@
                 Running...
             </button>
         </div>
+    </div>
+    <div class="highlight">
+        <button *ngIf='!editNewMode && !editMode' type="button" class="btn btn-primary btn-lg" [disabled]="loading" (click)="createQuery()">Create</button>
+        <button *ngIf='!editNewMode && !editMode && currentQuery.id != ""' type="button" class="btn btn-primary btn-lg" (click)="editQuery()" [disabled]="loading">Edit</button>
+        <button *ngIf='editNewMode && !editMode' type="button" class="btn btn-primary btn-lg" [disabled]="loading" (click)="saveQuery()">Save</button>
+        <button *ngIf='editMode && !editNewMode && currentQuery.id != ""' type="button" class="btn btn-primary btn-lg" [disabled]="loading" (click)="updateQuery()">Save</button>
+        <button *ngIf='editNewMode || editMode'type="button" class="btn btn-secondary btn-lg" (click)="cancelEdit()" [disabled]="loading">Cancel</button>
+        <button *ngIf='!editNewMode && !editMode && currentQuery.id != ""' type="button" class="btn btn-secondary btn-lg"  (click)="deleteQuery()" [disabled]="loading">Delete</button>
     </div>
     <br>
     <p class="text-center">Select a predefined query or Create your own customised query. Then, 'Run the query'.</p>
@@ -36,9 +42,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let query of queryArray; let i = index" [ngClass]="{'disabled': queryRunning}">
+            <tr *ngFor="let query of queryArray; let i = index" ng-disabled="queryRunning">
                 <td>
-                    <div class="input-group">
+                    <div *ngIf='query.canBeEdited' class="input-group">
                         <select [(ngModel)]="query.entityType" class="form-select" name="{{query.entityType}}" (ngModelChange)="onEntityTypeChange($event)">
                             <option selected>{{query.entityType}}</option>
                             <option value="Class">Class</option>
@@ -48,35 +54,46 @@
                             <option value="RelationalOperator">RelationalOperator</option>
                         </select>
                     </div>
+                    <div *ngIf='!query.canBeEdited' class="input-group">
+                        <input [(ngModel)]="query.entityType" class="form-control" type="text" name="{{query.entityType}}" disabled/>
+                    </div>
                 </td>
                 <td>
-                    <div class="input-group">
+                    <div *ngIf='(query.canBeEdited  && !loading)' class="input-group">
                         <select [(ngModel)]="query.id" class="form-select" name="{{query.id}}" (change)="onEntityChange(i, $event)">
                             <option selected>{{query.entity}}</option>
                             <option *ngFor="let entity of entityType" [ngValue]="entity.id">{{entity.label}}</option>
                         </select>
                     </div>
-                </td>
-                <td>
-                    <div class="text-center">
-                        <input [(ngModel)]="query.isOrderedBy" class="form-check-input" type="checkbox" name="{{query.isOrderedBy}}" />
+                    <div *ngIf='!query.canBeEdited' class="input-group">
+                        <input [(ngModel)]="query.entity" class="form-control" type="text" name="{{query.id}}" disabled/>
+                    </div>
+                    <div *ngIf='query.canBeEdited  && loading' class="d-flex justify-content-center">
+                        <div class="spinner-grow" role="status"></div>
                     </div>
                 </td>
                 <td>
                     <div class="text-center">
-                        <input [(ngModel)]="query.isShowedInResult" class="form-check-input" type="checkbox" name="{{query.isShowedInResult}}" />
+                        <input [(ngModel)]="query.isOrderedBy" class="form-check-input" type="checkbox" name="{{query.isOrderedBy}}" [disabled]="!query.canBeEdited"/>
                     </div>
                 </td>
                 <td>
                     <div class="text-center">
-                        <button class="btn btn-default"  type="button" (click)="deleteRow(i)">Delete</button>
+                        <input [(ngModel)]="query.isShowedInResult" class="form-check-input" type="checkbox" name="{{query.isShowedInResult}}" [disabled]="!query.canBeEdited" />
+                    </div>
+                </td>
+                <td>
+                    <div class="text-center">
+                        <button *ngIf="!query.canBeEdited" class="btn btn-default"  type="button" (click)="edit(i)">Edit</button>
+                        <button *ngIf="query.canBeEdited" class="btn btn-default"  type="button" (click)="editEnd(i)">OK</button>
+                        <button *ngIf="!query.canBeEdited" class="btn btn-default"  type="button" (click)="deleteRow(i)">Delete</button>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td>
                     <div class="input-group">
-                        <select id="newRowEntityType" [(ngModel)]="newRow.entityType" class="form-select" name="newRowEntityType" (ngModelChange)="onEntityTypeChange($event)">
+                        <select id="newRowEntityType" [(ngModel)]="newRow.entityType" class="form-select" name="newRowEntityType" (ngModelChange)="onEntityTypeChange($event)" [disabled]="!newRow.canBeEdited">
                             <option selected>{{newRow.entityType}}</option>
                             <option value="Class">Class</option>
                             <option value="DatatypeProperty">DatatypeProperty</option>
@@ -87,35 +104,34 @@
                     </div>
                 </td>
                 <td>
-                    <div *ngIf='!loading' class="input-group">
-                        <select [(ngModel)]="newRow.id" class="form-select" name="{{newRow.id}}" (change)="onNewRowEntityChange($event)" >
-                            <option selected>{{newRow.entity}}</option>
+                    <div *ngIf='!(loading && newRow.canBeEdited) ' class="input-group">
+                        <select [(ngModel)]="newRow.id" class="form-select" name="{{newRow.id}}" (change)="onNewRowEntityChange($event)" [disabled]="!newRow.canBeEdited" >
+                            <option selected></option>
                             <option *ngFor="let entity of entityType" [ngValue]="entity.id">{{entity.label}}</option>
                         </select>
                     </div>
-                    <div  *ngIf='loading' class="d-flex justify-content-center">
+                    <div  *ngIf='loading && newRow.canBeEdited' class="d-flex justify-content-center">
                         <div class="spinner-grow" role="status"></div>
                     </div>
                 </td>
                 <td>
                     <div class="text-center">
-                        <input class="form-check-input" type="checkbox" id="newRowIsOrderedBy" [(ngModel)]="newRow.isOrderedBy" name="newRowIsOrderedBy" />
+                        <input class="form-check-input" type="checkbox" id="newRowIsOrderedBy" [(ngModel)]="newRow.isOrderedBy" name="newRowIsOrderedBy" [disabled]="!newRow.canBeEdited"/>
                     </div>
                 </td>
                 <td>
                     <div class="text-center">
-                        <input class="form-check-input" type="checkbox" id="newRowIsShowedInResult" [(ngModel)]="newRow.isShowedInResult" name="newRowIsShowedInResult" />
+                        <input class="form-check-input" type="checkbox" id="newRowIsShowedInResult" [(ngModel)]="newRow.isShowedInResult" name="newRowIsShowedInResult" [disabled]="!newRow.canBeEdited" />
                     </div>
                 </td>
                 <td>
                     <div class="text-center">
-                        <button class="btn btn-default" type="button" (click)="addRow()">Add</button>
+                        <button class="btn btn-default" type="button" (click)="addRow()" [disabled]="!newRow.canBeEdited" >Add</button>
                     </div>
                 </td>
             </tr>
         </tbody>
     </table>
-    
     <br>
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
