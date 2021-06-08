@@ -1,4 +1,22 @@
 <br>
+<div *ngIf='alertType === "success"' class="alert alert-success alert-dismissible fade show" role="alert">
+    SUCCESS: {{alertMessage}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf='alertType === "danger"' class="alert alert-danger alert-dismissible fade show" role="alert">
+    ERROR: {{alertMessage}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf='alertType === "warning"' class="alert alert-warning alert-dismissible fade show" role="alert">
+    ATTENTION: {{alertMessage}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 <div class="container-fluid">
     <h1 class="display-6">Query The Ontology</h1>
     <br>
@@ -50,6 +68,7 @@
                             <option value="Class">Class</option>
                             <option value="DatatypeProperty">DatatypeProperty</option>
                             <option value="Individual">Individual</option>
+                            <option value="Literal">Literal</option>
                             <option value="ObjectProperty">ObjectProperty</option>
                             <option value="RelationalOperator">RelationalOperator</option>
                         </select>
@@ -59,7 +78,7 @@
                     </div>
                 </td>
                 <td>
-                    <div *ngIf='(query.canBeEdited  && !loading)' class="input-group">
+                    <div *ngIf='(query.canBeEdited  && !loading && !showLiteralTextBox)' class="input-group">
                         <select [(ngModel)]="query.id" class="form-select" name="{{query.id}}" (change)="onEntityChange(i, $event)">
                             <option selected>{{query.entity}}</option>
                             <option *ngFor="let entity of entityType" [ngValue]="entity.id">{{entity.label}}</option>
@@ -68,8 +87,11 @@
                     <div *ngIf='!query.canBeEdited' class="input-group">
                         <input [(ngModel)]="query.entity" class="form-control" type="text" name="{{query.id}}" disabled/>
                     </div>
-                    <div *ngIf='query.canBeEdited  && loading' class="d-flex justify-content-center">
+                    <div *ngIf='query.canBeEdited && loading && !showLiteralTextBox' class="d-flex justify-content-center">
                         <div class="spinner-grow" role="status"></div>
+                    </div>
+                    <div *ngIf='query.canBeEdited && showLiteralTextBox' class="input-group">
+                        <input [(ngModel)]="query.entity" class="form-control" type="text" name="{{query.id}}"/>
                     </div>
                 </td>
                 <td>
@@ -98,20 +120,24 @@
                             <option value="Class">Class</option>
                             <option value="DatatypeProperty">DatatypeProperty</option>
                             <option value="Individual">Individual</option>
+                            <option value="Literal">Literal</option>
                             <option value="ObjectProperty">ObjectProperty</option>
                             <option value="RelationalOperator">RelationalOperator</option>
                         </select>
                     </div>
                 </td>
                 <td>
-                    <div *ngIf='!(loading && newRow.canBeEdited) ' class="input-group">
+                    <div *ngIf='!(loading && newRow.canBeEdited) && !showLiteralTextBox' class="input-group">
                         <select [(ngModel)]="newRow.id" class="form-select" name="{{newRow.id}}" (change)="onNewRowEntityChange($event)" [disabled]="!newRow.canBeEdited" >
                             <option selected></option>
                             <option *ngFor="let entity of entityType" [ngValue]="entity.id">{{entity.label}}</option>
                         </select>
                     </div>
-                    <div  *ngIf='loading && newRow.canBeEdited' class="d-flex justify-content-center">
+                    <div  *ngIf='loading && newRow.canBeEdited && !showLiteralTextBox' class="d-flex justify-content-center">
                         <div class="spinner-grow" role="status"></div>
+                    </div>
+                    <div *ngIf='newRow.canBeEdited && showLiteralTextBox' class="input-group">
+                        <input [(ngModel)]="newRow.entity" class="form-control" type="text" name="{{newRow.id}}"/>
                     </div>
                 </td>
                 <td>
