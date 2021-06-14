@@ -8,11 +8,13 @@ import { SqwrlComponent } from './sqwrl/sqwrl.component';
 
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SchedulingComponent } from './scheduling/scheduling.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SqwrlComponent
+    SqwrlComponent,
+    SchedulingComponent
   ],
   imports: [
     BrowserModule,
