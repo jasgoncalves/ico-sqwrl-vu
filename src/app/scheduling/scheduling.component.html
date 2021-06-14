@@ -1,0 +1,564 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+
+<div class="container padding-bottom-3x mb-1">
+    <div *ngIf='alertType === "success"' class="alert alert-success alert-dismissible fade show" role="alert">
+        SUCCESS: {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div *ngIf='alertType === "danger"' class="alert alert-danger alert-dismissible fade show" role="alert">
+        ERROR: {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div *ngIf='alertType === "warning"' class="alert alert-warning alert-dismissible fade show" role="alert">
+        ATTENTION: {{alertMessage}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="closeAlert()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="input-group">
+        <form>
+            <div class="form-group row">
+                <label for="scheduling-name-problem" class="col-sm-4 col-form-label font-weight-bold" >Insert a new scheduling problem name: </label>
+                <div class="col-sm-8">
+                    <input [(ngModel)]="schedulingProblemName" name="{{schedulingProblemName}}" type="text" class="form-control" id="scheduling-name-problem" [disabled]="!isSchedulingProblemNameEditable">
+                </div>
+                <div class="w-100 py-1 px-2">
+                    <span class="text-sm-left font-italic">Your problem data will be saved in problem_name.owl file.</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card mb-3">
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
+            <div class="w-100 text-center py-1 px-2">
+                <span class="text-small">Please fill in the following sections one by one according to their order number.</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                <div *ngIf='!isProblemCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>1</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Problem</h4>
+                </div>
+                <div *ngIf='isProblemCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>1</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Problem</h4>
+                </div>
+                <div *ngIf='!isMachineCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>2</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Machine(s)</h4>
+                </div>
+                <div *ngIf='isMachineCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>2</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Machine(s)</h4>
+                </div>
+                <div *ngIf='!isOrderCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>3</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Order</h4>
+                </div>
+                <div *ngIf='isOrderCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>3</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Order</h4>
+                </div>
+                <div *ngIf='!isJobCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>4</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Job(s)</h4>
+                </div>
+                <div *ngIf='isJobCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>4</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Job(s)</h4>
+                </div>
+                <div *ngIf='!isTaskCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>5</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Task(s)</h4>
+                </div>
+                <div *ngIf='isTaskCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>5</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Task(s)</h4>
+                </div>
+                <div *ngIf='!isObjectiveFunctionCompleted' class="step">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>6</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Objective Function(s)</h4>
+                </div>
+                <div *ngIf='isObjectiveFunctionCompleted' class="step completed">
+                    <div class="step-icon-wrap">
+                        <div class="step-icon">
+                            <i>6</i>
+                        </div>
+                    </div>
+                    <h4 class="step-title">Objective Function(s)</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div *ngIf="!isProblemCompleted" class="container">
+                <table  id="problem-table" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Problem Property</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let problemProperty of problemProperties; let i = index">
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="problemProperty.id" name="{{problemProperty.id}}" class="form-control" type="text" disabled/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="problemProperty.value" name="{{problemProperty.value}}" class="form-control" type="text" disabled/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <!-- <button *ngIf='!problemProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editSchedulingProblemProperty(i)"><span class="pe-7s-pen"></span></button>
+                                    <button *ngIf='problemProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesSchedulingProblemProperty(i)"><span class="pe-7s-check"></span></button> -->
+                                    <button *ngIf='!problemProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteSchedulingProblemProperty(i)"><span class="pe-7s-trash"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <select id="new-problem-property" class="form-select" [(ngModel)]="newProblem.id" name="{{newProblem.id}}" (change)="onNewProblemPropertyChange($event)">
+                                        <option selected>Select the problem property ...</option>
+                                        <option *ngFor="let property of problems" [ngValue]="property.id">{{property.id}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div *ngIf="newProblem.dataType==='dateTime'" class="input-group">
+                                    <input class="form-control" [(ngModel)]="newProblem.value" type="datetime-local" name=""/>
+                                </div>
+                                <div *ngIf="newProblem.dataType==='int'" class="input-group">
+                                    <input class="form-control" [(ngModel)]="newProblem.value" type="number" min="0" name=""/>
+                                </div>
+                                <div *ngIf="newProblem.dataType==='boolean'"  class="input-group">
+                                    <select id="new-problem-property-boolean" [(ngModel)]="newProblem.value" class="form-select" name="new-problem-property-boolean">
+                                        <option value="true">true</option>
+                                        <option value="false">false</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center" >
+                                    <button class="btn btn-outline-primary btn-lg" (click)="addSchedulingProblemProperty()"><span class="pe-7s-plus button-icon"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setProblemCompleted()">Next >></button>
+                </div>
+            </div>
+            <div *ngIf="!isMachineCompleted && isProblemCompleted" class="container">
+                <div *ngFor="let newMachineProperty of newMachineProperties" class="container">
+                    <p class="text-left font-weight-bold">MachineID: {{newMachineProperty.machineId}}</p>
+                    <table  id="machines-table" class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Machine Property</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let machineProperty of machineProperties; let i = index">
+                                <td *ngIf="machineProperty.machineId===newMachineProperty.machineId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="machineProperty.id" name="{{machineProperty.id}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="machineProperty.machineId===newMachineProperty.machineId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="machineProperty.value" name="{{machineProperty.value}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="machineProperty.machineId===newMachineProperty.machineId">
+                                    <div class="text-center">
+                                        <!-- <button *ngIf='!machineProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editMachineProperty(i, machine)"><span class="pe-7s-pen"></span></button>
+                                        <button *ngIf='machineProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesMachineProperty(i, machine)"><span class="pe-7s-check"></span></button> -->
+                                        <button *ngIf='!machineProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteMachineProperty(i, newMachineProperty.machineId)"><span class="pe-7s-trash"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <select id="new-machine-property-{{newMachineProperty.machineId}}" class="form-select" [(ngModel)]="newMachineProperty.id" name="{{newMachineProperty.id}}" (change)="onNewMachinePropertyChange($event, newMachineProperty.machineId)">
+                                            <option selected>Select the machine property ...</option>
+                                            <option *ngFor="let property of machinePropertiesList" [ngValue]="property.id">{{property.id}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="newMachineProperty.dataType==='dateTime'" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newMachineProperty.value" type="datetime-local" name=""/>
+                                    </div>
+                                    <div *ngIf="newMachineProperty.dataType==='int'" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newMachineProperty.value" type="number" min="0" name=""/>
+                                    </div>
+                                    <div *ngIf="newMachineProperty.dataType==='boolean'"  class="input-group">
+                                        <select id="new-machine-property-boolean" [(ngModel)]="newMachineProperty.value" class="form-select" name="new-machine-property-boolean">
+                                            <option value="true">true</option>
+                                            <option value="false">false</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-center" >
+                                        <button class="btn btn-outline-primary btn-lg" (click)="addMachineProperty(newMachineProperty.machineId)"><span class="pe-7s-plus button-icon"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setProblemNotCompleted()"><< Previous</button>
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setMachineCompleted()">Next >></button>
+                </div>
+            </div>
+            <div *ngIf="!isOrderCompleted && isMachineCompleted" class="container">
+                <table  id="order-table" class="table table-striped table-bordered">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Order Property</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let orderProperty of orderProperties; let i = index">
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="orderProperty.id" name="{{orderProperty.id}}" class="form-control" type="text" disabled/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="orderProperty.value" name="{{orderProperty.value}}" class="form-control" type="text" disabled/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <!-- <button *ngIf='!orderProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editOrderProperty(i)"><span class="pe-7s-pen"></span></button>
+                                    <button *ngIf='orderProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesOrderProperty(i)"><span class="pe-7s-check"></span></button> -->
+                                    <button *ngIf='!orderProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteOrderProperty(i)"><span class="pe-7s-trash"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <select id="new-problem-property" class="form-select" [(ngModel)]="newOrder.id" name="{{newOrder.id}}" (change)="onNewOrderPropertyChange($event)">
+                                        <option selected>Select the problem property ...</option>
+                                        <option *ngFor="let property of orderPropertiesList" [ngValue]="property.id">{{property.id}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div *ngIf="newOrder.dataType==='dateTime'" class="input-group">
+                                    <input class="form-control" [(ngModel)]="newOrder.value" type="datetime-local" name=""/>
+                                </div>
+                                <div *ngIf="newOrder.dataType==='int'" class="input-group">
+                                    <input class="form-control" [(ngModel)]="newOrder.value" type="number" min="0" name=""/>
+                                </div>
+                                <div *ngIf="newOrder.dataType==='boolean'"  class="input-group">
+                                    <select id="new-order-property-boolean" [(ngModel)]="newOrder.value" class="form-select" name="new-order-property-boolean">
+                                        <option value="true">true</option>
+                                        <option value="false">false</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center" >
+                                    <button class="btn btn-outline-primary btn-lg" (click)="addOrderProperty()"><span class="pe-7s-plus button-icon"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setMachineNotCompleted()"><< Previous</button>
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setOrderCompleted()">Next >></button>
+                </div>
+            </div>   
+            <div *ngIf="!isJobCompleted && isOrderCompleted" class="container">
+                <div *ngFor="let newJobProperty of newJobProperties" class="container">
+                    <p class="text-left font-weight-bold">JobID: {{newJobProperty.jobId}}</p>
+                    <table  id="jobs-table" class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Job Property</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let jobProperty of jobProperties; let i = index">
+                                <td *ngIf="jobProperty.jobId===newJobProperty.jobId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="jobProperty.id" name="{{jobProperty.id}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="jobProperty.jobId===newJobProperty.jobId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="jobProperty.value" name="{{jobProperty.value}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="jobProperty.jobId===newJobProperty.jobId">
+                                    <div class="text-center">
+                                        <!-- <button *ngIf='!jobProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editJobProperty(i, job)"><span class="pe-7s-pen"></span></button>
+                                        <button *ngIf='jobProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesJobProperty(i, job)"><span class="pe-7s-check"></span></button> -->
+                                        <button *ngIf='!jobProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteJobProperty(i, newJobProperty.jobId)"><span class="pe-7s-trash"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <select id="new-job-property-{{newJobProperty.jobId}}" class="form-select" [(ngModel)]="newJobProperty.id" name="{{newJobProperty.id}}" (change)="onNewJobPropertyChange($event, newJobProperty.jobId)">
+                                            <option selected>Select the job property ...</option>
+                                            <option *ngFor="let property of jobPropertiesList" [ngValue]="property.id">{{property.id}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="newJobProperty.dataType==='dateTime'" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newJobProperty.value" type="datetime-local" name=""/>
+                                    </div>
+                                    <div *ngIf="newJobProperty.dataType==='int' && !(newJobProperty.id==='belongsToJobFamily')" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newJobProperty.value" type="number" min="0" name=""/>
+                                    </div>
+                                    <div *ngIf="newJobProperty.dataType==='boolean'"  class="input-group">
+                                        <select id="new-job-property-boolean" [(ngModel)]="newJobProperty.value" class="form-select" name="new-job-property-boolean">
+                                            <option value="true">true</option>
+                                            <option value="false">false</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newJobProperty.rangeId==='Job'"  class="input-group">
+                                        <select id="new-job-property-job" [(ngModel)]="newJobProperty.value" class="form-select" name="new-job-property-job">
+                                            <option selected>Select the job ...</option>
+                                            <option *ngFor="let job of jobsList" [ngValue]="job">{{job}}</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newJobProperty.rangeId==='JobFamily'" class="input-group">
+                                        <select id="new-job-property-family" [(ngModel)]="newJobProperty.value" class="form-select" name="new-job-property-family">
+                                            <option selected>Select the job family ...</option>
+                                            <option *ngFor="let jobFamily of jobFamiliesList" [ngValue]="jobFamily">{{jobFamily}}</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newJobProperty.rangeId==='Task'" class="input-group">
+                                        <select id="new-job-property-task" [(ngModel)]="newJobProperty.value" class="form-select" name="new-job-property-task">
+                                            <option selected>Select the task ...</option>
+                                            <option *ngFor="let task of tasksList" [ngValue]="task">{{task}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-center" >
+                                        <button class="btn btn-outline-primary btn-lg" (click)="addJobProperty(newJobProperty.jobId)"><span class="pe-7s-plus button-icon"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setOrderNotCompleted()"><< Previous</button>
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setJobCompleted()">Next >></button>
+                </div>
+            </div>
+            <div *ngIf="!isTaskCompleted && isJobCompleted" class="container">
+                <div *ngFor="let newTaskProperty of newTaskProperties" class="container">
+                    <p class="text-left font-weight-bold">TaskID: {{newTaskProperty.taskId}}</p>
+                    <table  id="tasks-table" class="table table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Task Property</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let taskProperty of taskProperties; let i = index">
+                                <td *ngIf="taskProperty.taskId===newTaskProperty.taskId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="taskProperty.id" name="{{taskProperty.id}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="taskProperty.taskId===newTaskProperty.taskId">
+                                    <div class="input-group">
+                                        <input [(ngModel)]="taskProperty.value" name="{{taskProperty.value}}" class="form-control" type="text" disabled/>
+                                    </div>
+                                </td>
+                                <td *ngIf="taskProperty.taskId===newTaskProperty.taskId">
+                                    <div class="text-center">
+                                        <!-- <button *ngIf='!taskProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editTaskProperty(i, task)"><span class="pe-7s-pen"></span></button>
+                                        <button *ngIf='taskProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesTaskProperty(i, task)"><span class="pe-7s-check"></span></button> -->
+                                        <button *ngIf='!taskProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteTaskProperty(i, newTaskProperty.taskId)"><span class="pe-7s-trash"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <select id="new-task-property-{{newTaskProperty.taskId}}" class="form-select" [(ngModel)]="newTaskProperty.id" name="{{newTaskProperty.id}}" (change)="onNewTaskPropertyChange($event, newTaskProperty.taskId)">
+                                            <option selected>Select the task property ...</option>
+                                            <option *ngFor="let property of taskPropertiesList" [ngValue]="property.id">{{property.id}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="newTaskProperty.dataType==='dateTime'" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newTaskProperty.value" type="datetime-local" name=""/>
+                                    </div>
+                                    <div *ngIf="newTaskProperty.dataType==='int'" class="input-group">
+                                        <input class="form-control" [(ngModel)]="newTaskProperty.value" type="number" min="0" name=""/>
+                                    </div>
+                                    <div *ngIf="newTaskProperty.dataType==='boolean'"  class="input-group">
+                                        <select id="new-task-property-boolean" [(ngModel)]="newTaskProperty.value" class="form-select" name="new-task-property-boolean">
+                                            <option value="true">true</option>
+                                            <option value="false">false</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newTaskProperty.rangeId==='Job'"  class="input-group">
+                                        <select id="new-task-property-job" [(ngModel)]="newTaskProperty.value" class="form-select" name="new-task-property-job">
+                                            <option selected>Select the job ...</option>
+                                            <option *ngFor="let job of jobsList" [ngValue]="job">{{job}}</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newTaskProperty.rangeId==='JobFamily'" class="input-group">
+                                        <select id="new-task-property-family" [(ngModel)]="newTaskProperty.value" class="form-select" name="new-task-property-family">
+                                            <option selected>Select the job family ...</option>
+                                            <option *ngFor="let jobFamily of jobFamiliesList" [ngValue]="jobFamily">{{jobFamily}}</option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="newTaskProperty.rangeId==='Task'" class="input-group">
+                                        <select id="new-task-property-task" [(ngModel)]="newTaskProperty.value" class="form-select" name="new-task-property-task">
+                                            <option selected>Select the task ...</option>
+                                            <option *ngFor="let task of tasksList" [ngValue]="task">{{task}}</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-center" >
+                                        <button class="btn btn-outline-primary btn-lg" (click)="addTaskProperty(newTaskProperty.taskId)"><span class="pe-7s-plus button-icon"></span></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setJobNotCompleted()"><< Previous</button>
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setTaskCompleted()">Next >></button>
+                </div>
+            </div>
+            <div *ngIf="!isObjectiveFunctionCompleted && isTaskCompleted" class="container">
+                <table  id="objectviFunction-table" class="table table-striped table-bobjectiveFunctioned">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">ObjectiveFunction Property</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let objectiveFunctionProperty of objectiveFunctionProperties; let i = index">
+                            <td>
+                                <div class="input-group">
+                                    <input [(ngModel)]="objectiveFunctionProperty.id" name="{{objectiveFunctionProperty.id}}" class="form-control" type="text" disabled/>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <!-- <button *ngIf='!objectiveFunctionProperty.canBeEdited' class="btn btn-outline-primary btn-lg" type="button" (click)="editObjectiveFunctionProperty(i)"><span class="pe-7s-pen"></span></button>
+                                    <button *ngIf='objectiveFunctionProperty.canBeEdited' class="btn btn-outline-success btn-lg" type="button" (click)="confirmChangesObjectiveFunctionProperty(i)"><span class="pe-7s-check"></span></button> -->
+                                    <button *ngIf='!objectiveFunctionProperty.canBeEdited' class="btn btn-outline-danger btn-lg" type="button" (click)="deleteObjectiveFunctionProperty(i)"><span class="pe-7s-trash"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <select id="new-problem-property" class="form-select" [(ngModel)]="newObjectiveFunction.id" name="{{newObjectiveFunction.id}}" (change)="onNewObjectiveFunctionPropertyChange($event)">
+                                        <option selected>Select the problem property ...</option>
+                                        <option *ngFor="let property of objectiveFunctionPropertiesList" [ngValue]="property.id">{{property.id}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center" >
+                                    <button class="btn btn-outline-primary btn-lg" (click)="addObjectiveFunctionProperty()"><span class="pe-7s-plus button-icon"></span></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setMachineNotCompleted()"><< Previous</button>
+                    <button class="btn btn-primary btn-lg" type="button" (click)="setObjectiveFunctionCompleted()">Export File >></button>
+                </div>
+            </div>
+            <div *ngIf="isObjectiveFunctionCompleted" class="container">
+                <h1>The file has been updated!</h1>
+                <button class="btn btn-primary btn-lg" type="button" onclick="window.location.href='scheduling'">
+                    Restart
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
