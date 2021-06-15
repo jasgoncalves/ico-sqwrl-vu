@@ -89,6 +89,7 @@ export class SqwrlComponent implements OnInit {
       t.queryElement.entityType = element.entityType
       t.queryElement.isOrderedBy = element.orderedBy
       t.queryElement.isShowedInResult = element.columnShowed
+      t.entity = t.entity==='Literal' ? element.args[0] : t.entity
       newQueryArray.push(t)         
     });
 
@@ -150,6 +151,8 @@ export class SqwrlComponent implements OnInit {
 
     queryBody.name = name
 
+    console.log(this.queryArray)
+
     this.queryArray.forEach(x=> queryBody.query_parameters.push(
       new SQWRLQueryElement(
         x.queryElement.entityType, 
@@ -158,6 +161,8 @@ export class SqwrlComponent implements OnInit {
         x.queryElement.isOrderedBy,
         x.queryElement.isShowedInResult, 
         x.queryElement.args)))
+
+    console.log(queryBody)
     
     return JSON.stringify(queryBody)
 
@@ -312,10 +317,13 @@ export class SqwrlComponent implements OnInit {
         )
       )
     this.newRow.canBeEdited = false
+    this.newRow.queryElement.isOrderedBy = this.newRow.isOrderedBy
+    this.newRow.queryElement.isShowedInResult = this.newRow.isShowedInResult
     if (this.queryArray.length > 0) {
       switch(this.newRow.entityType) { 
         case "Class": { 
           this.newRow.queryElement.args.push(this.variables.pop()) 
+          
           break; 
         } 
         case "ObjectProperty": { 
@@ -326,7 +334,7 @@ export class SqwrlComponent implements OnInit {
         case "DatatypeProperty": { 
           this.newRow.queryElement.args.push(this.variables.pop()) 
           this.newRow.queryElement.args.push(this.queryArray[this.queryArray.length - 1].queryElement.args[this.queryArray[this.queryArray.length - 1].queryElement.args.length -1])
-          
+          this.newRow.queryElement.args.reverse()
           break; 
         } 
         case "Individual": { 
@@ -412,7 +420,10 @@ export class SqwrlComponent implements OnInit {
 
   editEnd(index:number) {  
     this.queryArray[index].canBeEdited = false; 
-    this.newRow.canBeEdited = true;   
+    this.queryArray[index].queryElement.isOrderedBy = this.queryArray[index].isOrderedBy; 
+    this.queryArray[index].queryElement.isShowedInResult = this.queryArray[index].isShowedInResult; 
+    this.newRow.canBeEdited = true; 
+    console.log(this.queryArray)  
   }
 
   onQueryListChange(entityType : string){
@@ -429,6 +440,7 @@ export class SqwrlComponent implements OnInit {
       t.queryElement.entityType = element.entityType
       t.queryElement.isOrderedBy = element.orderedBy
       t.queryElement.isShowedInResult = element.columnShowed
+      t.entity = t.entity==='Literal' ? element.args[0] : element.name
       newQueryArray.push(t)         
     });
 

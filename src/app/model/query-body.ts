@@ -39,12 +39,12 @@ export class SQWRLQueryElementResponse {
 
 export class SQWRLQueryElement {
 
-    entity_type: string = "";
-    entity: string = "";
-    name: string = "";
-    is_ordered_by: boolean = false;  
-    is_column_showed: boolean = true;
-    args: any[] = [];  
+    entity_type: string;
+    entity: string;
+    name: string;
+    is_ordered_by: boolean;  
+    is_column_showed: boolean;
+    args: any[];  
     
     constructor(entityType: string, entity: string, name: string, isOrderedBy: boolean, isColumnShowed: boolean, args: any[]){
         this.entity_type = entityType

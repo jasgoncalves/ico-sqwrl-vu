@@ -328,6 +328,7 @@ export class SchedulingComponent implements OnInit {
     console.log(newElement);
     var row = newElement;
     row.dataType = this.jobPropertiesList.filter(x=> x.id === row.id)[0].dataType;
+    row.dataTypeProperty = this.jobPropertiesList.filter(x=> x.id === row.id)[0].dataTypeProperty;
     row.rangeId = this.jobPropertiesList.filter(x=> x.id === row.id)[0].rangeId;
   }
   
@@ -418,6 +419,7 @@ export class SchedulingComponent implements OnInit {
     console.log(newElement);
     var row = newElement;
     row.dataType = this.taskPropertiesList.filter(x=> x.id === row.id)[0].dataType;
+    row.dataTypeProperty = this.taskPropertiesList.filter(x=> x.id === row.id)[0].dataTypeProperty;
     row.rangeId = this.taskPropertiesList.filter(x=> x.id === row.id)[0].rangeId;
   }
   
@@ -577,16 +579,18 @@ export class SchedulingComponent implements OnInit {
     var machineId : Array<number> = []
 
     this.machineProperties.forEach(element=>{
-      if(!(machineId.filter(id=> id === element.machineId).length===0))
+      if((machineId.filter(id=> id === element.machineId).length===0))
         machineId.push(element.machineId)
     })
+
+    console.log(machineId)
 
     machineId.forEach(id => {
       var machine : Model = new Model("Machine"+id)
       this.machineProperties.filter(x=>x.machineId===id).forEach(element=> { 
         var property : Property = new Property() 
         property.name = element.id
-        property.value = element.id
+        property.value = element.value
         property.type = 'DatatypeProperty'
         machine.properties.push(property)
       })
@@ -598,16 +602,18 @@ export class SchedulingComponent implements OnInit {
     var jobId : Array<number> = []
 
     this.jobProperties.forEach(element=>{
-      if(!(jobId.filter(id=> id === element.jobId).length===0))
+      if((jobId.filter(id=> id === element.jobId).length===0))
         jobId.push(element.jobId)
     })
+
+    console.log(this.jobProperties)
 
     jobId.forEach(id => {
       var job : Model = new Model("Job"+id)
       this.jobProperties.filter(x=>x.jobId===id).forEach(element=> {  
         var property : Property = new Property()
         property.name = element.id
-        property.value = element.id
+        property.value = element.value
         property.type = element.dataTypeProperty
         job.properties.push(property)
       })
@@ -619,7 +625,7 @@ export class SchedulingComponent implements OnInit {
     var taskId : Array<number> = []
 
     this.taskProperties.forEach(element=>{
-      if(!(taskId.filter(id=> id === element.taskId).length===0))
+      if((taskId.filter(id=> id === element.taskId).length===0))
         taskId.push(element.taskId)
     })
 
@@ -628,7 +634,7 @@ export class SchedulingComponent implements OnInit {
       this.taskProperties.filter(x=>x.taskId===id).forEach(element=> { 
         var property : Property = new Property() 
         property.name = element.id
-        property.value = element.id
+        property.value = element.value
         property.type = element.dataTypeProperty
         task.properties.push(property)
       })
