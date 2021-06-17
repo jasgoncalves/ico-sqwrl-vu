@@ -40,7 +40,7 @@ Tecnologias utilizadas mais relevantes:
 ![image](https://user-images.githubusercontent.com/33223967/122312412-11325300-cf0c-11eb-9384-183ea14dc757.png)
 
 
-# Angula Notes:
+# Angular Notes:
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.0.2.
 
