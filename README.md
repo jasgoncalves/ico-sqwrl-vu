@@ -37,7 +37,7 @@ Tecnologias utilizadas mais relevantes:
 
 /scheduling
 
-![image](https://user-images.githubusercontent.com/33223967/122312353-f069fd80-cf0b-11eb-9cb8-7d52ac1b9d9a.png)
+![image](https://user-images.githubusercontent.com/33223967/122312412-11325300-cf0c-11eb-9384-183ea14dc757.png)
 
 
 # Angula Notes:
