@@ -13,6 +13,8 @@ VOWL
 
 Este repositorio representa a parte visual da aplicacao. Foram desenvolvidas duas views, uma para a criacao e execucao que queries sobre as ontologias e a outra para a demonstracao da utilizacao dos recursos de uma ontologia para a definicao de um problema de escalonamento (Scheduling Problem). Estas views consomem a API desenvovilda, o seu codigo fonte esta disponivel no repositorio ...
 
+Estando grande parte da logica implementada na API, esta parte do desenvolvimento representa a manipulacao dos dados recebidos da API, para que o utilizador possa de uma forma simples interagir com uma ontologia.
+
 ## Arquitetura
 
 Para este projeto optei como padrao arquitetural da aplicacao o pardrao _Clean Architecture_ proposto por Robert Martin, com objetivo de promover a implementacao de um sistema reusavel, independente de tecnologia e testavel.
@@ -23,14 +25,19 @@ Para este projeto optei como padrao arquitetural da aplicacao o pardrao _Clean A
 
 Tecnologias utilizadas mais relevantes:
 
-Linguagem: 
+- Linguagem: Typescript
 
-  - Typescript
+- Angular12 (https://angular.io/)
 
-- Angular11 (https://angular.io/)
+## Endpoints
 
+/sqwrl
 
+![image](https://user-images.githubusercontent.com/33223967/122312200-a6811780-cf0b-11eb-9e7f-aa43b1d2fe5e.png)
 
+/scheduling
+
+![image](https://user-images.githubusercontent.com/33223967/122312353-f069fd80-cf0b-11eb-9cb8-7d52ac1b9d9a.png)
 
 
 # Angula Notes:
