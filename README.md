@@ -11,17 +11,13 @@ OWL
 SQWRL
 VOWL
 
-A API (REST) desenvolvida tem como objetivo principal permitir de forma simples, sem ser necessario conhecer em detalhe a sintaxe SQWRL, efetuar queries a uma ontologia (OWL) previamente carregadas. Tem como outras funcionalidades a possibilidade de guardar em base de dados queries criadas via API e tambem uma funcionlaidade especifica para edicao de um ficheiro OWL, neste projeto foi utilizado para demonstrar a possibilidade de adicionar-mos o nosso problema customizado de scheduling.
+Este repositorio representa a parte visual da aplicacao. Foram desenvolvidas duas views, uma para a criacao e execucao que queries sobre as ontologias e a outra para a demonstracao da utilizacao dos recursos de uma ontologia para a definicao de um problema de escalonamento (Scheduling Problem). Estas views consomem a API desenvovilda, o seu codigo fonte esta disponivel no repositorio ...
 
 ## Arquitetura
 
 Para este projeto optei como padrao arquitetural da aplicacao o pardrao _Clean Architecture_ proposto por Robert Martin, com objetivo de promover a implementacao de um sistema reusavel, independente de tecnologia e testavel.
 
-![image](https://user-images.githubusercontent.com/33223967/122293324-cfdf7a80-ceee-11eb-9725-4dceef05967b.png)
-
-Diagrama da aplicacao
-
-![image](https://user-images.githubusercontent.com/33223967/122305839-61ef7f00-ceff-11eb-8a24-39cebc349fbb.png)
+![image](https://user-images.githubusercontent.com/33223967/122310876-d4189180-cf08-11eb-84ad-4ae572cc1d6c.png)
 
 ## Tecnologias 
 
@@ -29,14 +25,11 @@ Tecnologias utilizadas mais relevantes:
 
 Linguagem: 
 
-  - Kotlin v 1.5.0
-  - Java - JDK 11.0.9 (Camada Infrastructura)
+  - Typescript
 
-- Apache Jena 4.0.0 (https://jena.apache.org/)
-- SQWRL API 2.0.8 (https://github.com/protegeproject/swrlapi/wiki/SQWRLQueryAPI)
-- Hibernate 5.4.2 (https://hibernate.org/)
-- H2 Database Engine 1.4.2 (https://h2database.com/html/main.html)
-- Spring Boot - 5.1.6 (https://spring.io/projects/spring-boot) 
+- Angular11 (https://angular.io/)
+
+
 
 
 
